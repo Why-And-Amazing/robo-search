@@ -57,12 +57,12 @@ export default function Home() {
   return (
     <>
       <div className="bg-gradient-to-b bg-gray-900 to-blue-300">
-        <div className="p-6 ">
+        <div className="p-6">
           <div className="p-6">
             <SearchBox onSearchChange={onSearchChange} />
           </div>
           {isError && (
-            <div className="flex h-screen ">
+            <div className="flex h-screen">
               <div className=" m-auto">
                 <h1 className="text-gray-50">
                   Something went wrong during fetching. Please refresh page...
@@ -82,7 +82,7 @@ export default function Home() {
               </div>
             </div>
           ) : (
-            <div className="flex h-screen ">
+            <div className="flex h-screen justify-center ">
               <div className="p-2">
                 <CardList key={robots.id} robots={robots} query={query} />
               </div>
