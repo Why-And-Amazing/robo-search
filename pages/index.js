@@ -82,7 +82,7 @@ export default function Home() {
               </div>
             </div>
           ) : (
-            <div className="flex h-screen justify-center ">
+            <div className="flex h-screen justify-center">
               <div className="p-2">
                 <CardList key={robots.id} robots={robots} query={query} />
               </div>
