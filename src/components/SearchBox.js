@@ -20,7 +20,7 @@ const SearchBox = ({ onSearchChange }) => {
         type="text"
         aria-label="Fill me..."
         placeholder="Fill me..."
-        onChange={onSearchChange}
+        onChange={(e) => onSearchChange(e)}
       />
     </form>
   );

@@ -1,93 +1,53 @@
-import React, { useState, useEffect } from 'react';
-
-import Loader from 'react-loader-spinner';
-import axios from 'axios';
+import React, { useState } from 'react';
 
 import SearchBox from '../src/components/SearchBox';
 import CardList from '../src/components/CardList';
 
 export default function Home() {
+  const [query, setQuery] = useState('');
   const RandomCharsToUse =
     'abcdefghijkmnpqrstuvwxyz23456789ABCDEFGHJKLMNPQRSTUVWXYZ./*-+';
-  const randomQuery = RandomCharsToUse.charAt(
-    Math.random() * (RandomCharsToUse.length - 1) + 1,
-  );
-  const [query, setQuery] = useState('');
-  const [robots, setRobots] = useState([{ id: '', text: '' }]);
-  const [url, setUrl] = useState(
-    `https://hn.algolia.com/api/v1/search?query=${randomQuery}`,
-  );
-  const [isLoading, setIsLoading] = useState(false);
-  const [isError, setIsError] = useState(false);
-
-  const onSearchChange = (e) => {
-    e.preventDefault();
-    setQuery(e.target.value.trim());
-    setUrl(`https://hn.algolia.com/api/v1/search?query=${query}`);
+  const randomQuery = () => {
+    return RandomCharsToUse.charAt(
+      Math.random() * (RandomCharsToUse.length - 1) + 1,
+    );
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      setIsError(false);
-      setIsLoading(true);
+  const [url, setUrl] = useState(
+    `https://hn.algolia.com/api/v1/search?query=${randomQuery()}`,
+  );
 
-      try {
-        const result = await axios(url);
-        const newElem = [];
-        result.data.hits.forEach((item) => {
-          if (item.title.toLowerCase().includes(query.toLowerCase())) {
-            const robot = {
-              id: item.url,
-              text: item.title,
-            };
-            newElem.push(robot);
-          }
-        });
-        setRobots(newElem);
-      } catch (error) {
-        setIsError(true);
-      }
+  let onSearchChange = (e) => {
+    const newQuery = e.target.value.trim();
+    e.preventDefault();
+    setQuery(newQuery);
+    setUrl(`https://hn.algolia.com/api/v1/search?query=${newQuery}`);
+  };
 
-      setIsLoading(false);
+  const debounce = (func, delay) => {
+    let debounceTimer;
+    return function () {
+      const context = this;
+      const args = arguments;
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(() => func.apply(context, args), delay);
     };
+  };
 
-    fetchData();
-  }, [url]);
+  let optimisedHandleChange = debounce(onSearchChange, 600);
 
   return (
     <>
       <div className="clearfix bg-gradient-to-b bg-gray-900 to-blue-300">
         <div className="p-6">
           <div className="p-6">
-            <SearchBox onSearchChange={onSearchChange} />
+            <SearchBox onSearchChange={optimisedHandleChange} />
           </div>
-          {isError && (
-            <div className="flex h-screen">
-              <div className=" m-auto">
-                <h1 className="text-gray-50">
-                  Something went wrong during fetching. Please refresh page...
-                </h1>
-              </div>
+          <div className="flex h-screen justify-center">
+            <div className="p-2">
+              <CardList url={url} query={query} />
             </div>
-          )}
-          {isLoading ? (
-            <div className="flex h-screen ">
-              <div className="m-auto">
-                <Loader
-                  type="TailSpin"
-                  color="#00BFFF"
-                  height={80}
-                  width={80}
-                />
-              </div>
-            </div>
-          ) : (
-            <div className="flex h-screen justify-center">
-              <div className="p-2">
-                <CardList key={robots.id} robots={robots} query={query} />
-              </div>
-            </div>
-          )}
+          </div>
         </div>
       </div>
     </>
