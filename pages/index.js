@@ -56,7 +56,7 @@ export default function Home() {
 
   return (
     <>
-      <div className="bg-gradient-to-b bg-gray-900 to-blue-300">
+      <div className="clearfix bg-gradient-to-b bg-gray-900 to-blue-300">
         <div className="p-6">
           <div className="p-6">
             <SearchBox onSearchChange={onSearchChange} />
