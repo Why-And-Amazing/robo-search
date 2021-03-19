@@ -23,7 +23,7 @@ export default function Home() {
   const onSearchChange = (e) => {
     e.preventDefault();
     setQuery(e.target.value.trim());
-    setUrl(`http://hn.algolia.com/api/v1/search?query=${query}`);
+    setUrl(`https://hn.algolia.com/api/v1/search?query=${query}`);
   };
 
   useEffect(() => {
